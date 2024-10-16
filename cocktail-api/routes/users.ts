@@ -2,8 +2,12 @@ import express from 'express';
 import {imagesUpload} from '../multer';
 import mongoose from 'mongoose';
 import User from '../models/User';
+import {OAuth2Client} from 'google-auth-library';
+import config from '../config';
+import {randomUUID} from 'node:crypto';
 
 const usersRouter = express.Router();
+const googleClient = new OAuth2Client(config.google.clientId);
 
 usersRouter.post('/', imagesUpload.single('avatar'), async (req, res, next) => {
   try {
@@ -45,9 +49,48 @@ usersRouter.post('/sessions', async (req, res, next) => {
    }
 
    user.generateToken();
-   user.save();
+   await user.save();
 
    return res.send(user);
+  } catch (error) {
+    return next(error);
+  }
+});
+
+usersRouter.post('/google', async (req, res, next) => {
+  try {
+    const ticket = await googleClient.verifyIdToken({
+      idToken: req.body.credential,
+      audience: config.google.clientId,
+    });
+
+    const payload = ticket.getPayload();
+
+    if(!payload) {
+      return res.status(400).send({error: 'Google Login Error'});
+    }
+
+    const email = payload.email;
+    const id = payload.sub;
+    const displayName = payload.name;
+    const avatar = payload.picture;
+
+    let user = await User.findOne({googleId: id});
+
+    if(!user) {
+      user = new User({
+        email,
+        password: randomUUID(),
+        googleId: id,
+        displayName,
+        avatar,
+      });
+
+      user.generateToken();
+      await user.save();
+
+      return res.send(user);
+    }
   } catch (error) {
     return next(error);
   }
