@@ -1,4 +1,7 @@
 import {CorsOptions} from 'cors';
+import path from 'path';
+
+const rootPath = __dirname;
 
 const corsWhitelist = ['http://localhost:5173'];
 const corsOptions: CorsOptions = {
@@ -12,6 +15,8 @@ const corsOptions: CorsOptions = {
 };
 
 const config = {
+  rootPath,
+  publicPath: path.join(rootPath, 'public'),
   corsOptions,
   database: 'mongodb://localhost/cocktail',
 };
