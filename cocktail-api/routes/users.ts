@@ -85,12 +85,12 @@ usersRouter.post('/google', async (req, res, next) => {
         displayName,
         avatar,
       });
-
-      user.generateToken();
-      await user.save();
-
-      return res.send(user);
     }
+
+    user.generateToken();
+    await user.save();
+
+    return res.send(user);
   } catch (error) {
     return next(error);
   }

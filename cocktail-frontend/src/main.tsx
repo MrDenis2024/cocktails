@@ -11,18 +11,22 @@ import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import {BrowserRouter} from 'react-router-dom';
 import {ToastContainer} from 'react-toastify';
+import {GoogleOAuthProvider} from '@react-oauth/google';
+import {GOOGLE_CLIENT_ID} from './constants';
 
 addInterceptors(store);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Provider store={store}>
-      <PersistGate persistor={persistor}>
-        <ToastContainer position="bottom-right" />
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </PersistGate>
-    </Provider>
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+      <Provider store={store}>
+        <PersistGate persistor={persistor}>
+          <ToastContainer position="bottom-right" />
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </PersistGate>
+      </Provider>
+    </GoogleOAuthProvider>
   </StrictMode>,
 );

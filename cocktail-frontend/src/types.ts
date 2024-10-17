@@ -15,6 +15,11 @@ export interface RegisterMutation {
   avatar: File | null;
 }
 
+export interface LoginMutation {
+  email: string;
+  password: string;
+}
+
 export interface ValidationError {
   errors: {
     [key: string]: {
