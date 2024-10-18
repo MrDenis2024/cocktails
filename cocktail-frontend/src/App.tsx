@@ -9,6 +9,7 @@ import {useAppSelector} from './app/hooks';
 import {selectUser} from './store/usersSlice';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import Cocktail from './containers/Cocktail/Cocktail';
+import NewCocktail from './containers/NewCocktail/NewCocktail';
 
 const App = () => {
   const user = useAppSelector(selectUser);
@@ -18,6 +19,7 @@ const App = () => {
       <Routes>
         <Route path='/' element={<Cocktails />} />
         <Route path='/cocktail/:id' element={<Cocktail />} />
+        <Route path='/new-cocktail' element={<ProtectedRoute isAllowed={user && (user.role === 'admin' || user.role === 'user')} ><NewCocktail /> </ProtectedRoute>} />
         <Route path='/my-cocktails' element={<ProtectedRoute isAllowed={user && (user.role === 'admin' || user.role === 'user')}><MyCocktails /> </ProtectedRoute>} />
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />

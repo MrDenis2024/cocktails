@@ -1,6 +1,13 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {Cocktail} from '../types';
-import {changeCocktail, deleteCocktail, fetchCocktails, fetchMyCockTails, fetchOneCocktail} from './cocktailsThunks';
+import {
+  changeCocktail,
+  createCocktail,
+  deleteCocktail,
+  fetchCocktails,
+  fetchMyCockTails,
+  fetchOneCocktail
+} from './cocktailsThunks';
 
 export interface CocktailsState {
   fetchCocktailsLoading: boolean;
@@ -9,6 +16,7 @@ export interface CocktailsState {
   cocktail: Cocktail | null;
   fetchOneLoading: boolean;
   myCocktailsFetchLoading: boolean;
+  createCocktailLoading: boolean,
   changeLoadingCocktail: false | string;
   deleteLoadingCocktail: false | string;
 }
@@ -19,6 +27,7 @@ const initialState: CocktailsState = {
   myCocktails: [],
   cocktail: null,
   fetchOneLoading: false,
+  createCocktailLoading: false,
   myCocktailsFetchLoading: false,
   changeLoadingCocktail: false,
   deleteLoadingCocktail: false,
@@ -57,6 +66,14 @@ export const cocktailsSlice = createSlice({
       state.fetchOneLoading = false;
     });
 
+    builder.addCase(createCocktail.pending, (state: CocktailsState) => {
+      state.createCocktailLoading = true;
+    }).addCase(createCocktail.fulfilled, (state: CocktailsState) => {
+      state.createCocktailLoading = false;
+    }).addCase(createCocktail.rejected, (state: CocktailsState) => {
+      state.createCocktailLoading = false;
+    });
+
     builder.addCase(changeCocktail.pending, (state: CocktailsState, {meta: {arg: cocktail}}) => {
       state.changeLoadingCocktail = cocktail;
     }).addCase(changeCocktail.fulfilled, (state: CocktailsState) => {
@@ -82,6 +99,7 @@ export const cocktailsSlice = createSlice({
     selectorMyCocktailsFetchLoading: (state: CocktailsState) => state.myCocktailsFetchLoading,
     selectorFetchOneLoading: (state: CocktailsState) => state.fetchOneLoading,
     selectorCocktail: (state: CocktailsState) => state.cocktail,
+    selectorCreateCocktailLoading: (state: CocktailsState) => state.createCocktailLoading,
   },
 });
 
@@ -95,4 +113,5 @@ export const {
   selectorMyCocktailsFetchLoading,
   selectorFetchOneLoading,
   selectorCocktail,
+  selectorCreateCocktailLoading,
 } = cocktailsSlice.selectors;

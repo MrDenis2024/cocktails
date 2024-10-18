@@ -51,3 +51,15 @@ export interface Cocktail {
   isPublished: boolean;
   ingredients: Ingredient[];
 }
+
+export interface IngredientMutation {
+  ingredientName: string;
+  amount: string;
+}
+
+export interface CocktailMutation {
+  name: string;
+  image: File | null;
+  recipe: string;
+  ingredients: IngredientMutation[];
+}

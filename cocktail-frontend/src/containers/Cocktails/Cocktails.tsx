@@ -18,7 +18,7 @@ const Cocktails = () => {
   }, [dispatch]);
 
   return (
-    <div className='mt-5'>
+    <div className='my-4'>
       <h2 className='text-center'>Cocktails</h2>
       {fetchLoading && <div className='text-center mt-5'><Spinner /></div>}
       {cocktails.length > 0 && (
