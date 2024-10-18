@@ -1,10 +1,12 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {Cocktail} from '../types';
-import {changeCocktail, deleteCocktail, fetchCocktails} from './cocktailsThunks';
+import {changeCocktail, deleteCocktail, fetchCocktails, fetchMyCockTails} from './cocktailsThunks';
 
 export interface CocktailsState {
   fetchCocktailsLoading: boolean;
   cocktails: Cocktail[];
+  myCocktails: Cocktail[];
+  myCocktailsFetchLoading: boolean;
   changeLoadingCocktail: false | string;
   deleteLoadingCocktail: false | string;
 }
@@ -12,6 +14,8 @@ export interface CocktailsState {
 const initialState: CocktailsState = {
   fetchCocktailsLoading: false,
   cocktails: [],
+  myCocktails: [],
+  myCocktailsFetchLoading: false,
   changeLoadingCocktail: false,
   deleteLoadingCocktail: false,
 };
@@ -45,12 +49,23 @@ export const cocktailsSlice = createSlice({
     }).addCase(deleteCocktail.rejected, (state: CocktailsState) => {
       state.deleteLoadingCocktail = false;
     });
+
+    builder.addCase(fetchMyCockTails.pending, (state: CocktailsState) => {
+      state.myCocktailsFetchLoading = true;
+    }).addCase(fetchMyCockTails.fulfilled, (state: CocktailsState, {payload: cocktail}) => {
+      state.myCocktails = cocktail;
+      state.myCocktailsFetchLoading = false;
+    }).addCase(fetchMyCockTails.rejected, (state: CocktailsState) => {
+      state.myCocktailsFetchLoading = false;
+    });
   },
   selectors: {
     selectorFetchCocktailLoading: (state: CocktailsState) => state.fetchCocktailsLoading,
     selectorCocktails: (state: CocktailsState) => state.cocktails,
     selectorChangeLoadingCocktail: (state: CocktailsState) => state.changeLoadingCocktail,
     selectorDeleteLoadingCocktail: (state: CocktailsState) => state.deleteLoadingCocktail,
+    selectorMyCocktails: (state: CocktailsState) => state.myCocktails,
+    selectorMyCocktailsFetchLoading: (state: CocktailsState) => state.myCocktailsFetchLoading,
   },
 });
 
@@ -60,4 +75,6 @@ export const {
   selectorCocktails,
   selectorChangeLoadingCocktail,
   selectorDeleteLoadingCocktail,
+  selectorMyCocktails,
+  selectorMyCocktailsFetchLoading,
 } = cocktailsSlice.selectors;

@@ -2,22 +2,57 @@ import React from 'react';
 import {Cocktail} from '../../types';
 import {Link, useLocation} from 'react-router-dom';
 import {API_URL} from '../../constants';
-import {useAppSelector} from '../../app/hooks';
+import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {selectUser} from '../../store/usersSlice';
 import ButtonSpinner from '../Spinner/ButtonSpinner';
 import {selectorChangeLoadingCocktail, selectorDeleteLoadingCocktail} from '../../store/cocktailsSlice';
+import {changeCocktail, deleteCocktail, fetchCocktails, fetchMyCockTails} from '../../store/cocktailsThunks';
+import {toast} from 'react-toastify';
 
 interface Props {
   cocktail: Cocktail;
-  handleCocktailChange: (id: string) => void;
-  handleCocktailDelete: (id: string) => void;
 }
 
-const CocktailItem: React.FC<Props> = ({cocktail, handleCocktailChange, handleCocktailDelete}) => {
+const CocktailItem: React.FC<Props> = ({cocktail,}) => {
   const user = useAppSelector(selectUser);
+  const dispatch = useAppDispatch();
   const cocktailChangeLoading = useAppSelector(selectorChangeLoadingCocktail);
   const cocktailDeleteLoading = useAppSelector(selectorDeleteLoadingCocktail);
   const {pathname: location} = useLocation();
+
+  const handleCocktailChange = async (cocktailId: string) => {
+    try {
+      await dispatch(changeCocktail(cocktailId)).unwrap();
+      toast.success('Cocktail status successfully changed');
+      if(location === '/') {
+        dispatch(fetchCocktails());
+      } else {
+        if(user) {
+          dispatch(fetchMyCockTails(user._id));
+        }
+      }
+    } catch {
+      toast.error('There was an error changing cocktail status');
+    }
+  };
+
+  const handleCocktailDelete = async (cocktailId: string) => {
+    try {
+      if(window.confirm('Вы точно хотите удалить данный коктель?')) {
+        await dispatch(deleteCocktail(cocktailId)).unwrap();
+        if(location === '/') {
+          dispatch(fetchCocktails());
+        } else {
+          if(user) {
+            dispatch(fetchMyCockTails(user._id));
+          }
+        }
+        toast.success('Cocktail successfully delete');
+      }
+    } catch {
+      toast.error('There was an error delete cocktail');
+    }
+  };
 
   return (
     <div className='card'>
