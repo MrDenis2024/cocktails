@@ -56,7 +56,7 @@ const CocktailItem: React.FC<Props> = ({cocktail,}) => {
 
   return (
     <div className='card'>
-      <Link to={`/cocktails/${cocktail._id}`} className="text-decoration-none flex-grow-1" style={{width: '275px'}}>
+      <Link to={`/cocktail/${cocktail._id}`} className="text-decoration-none flex-grow-1" style={{width: '275px'}}>
         <img src={`${API_URL}/${cocktail.image}`} className="card-img-top" alt={cocktail.name} style={{maxHeight: '183px'}}/>
         <div className="card-body text-center">
           <h5 className="card-title text-dark">{cocktail.name}</h5>

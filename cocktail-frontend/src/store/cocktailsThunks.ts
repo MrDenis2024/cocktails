@@ -12,6 +12,11 @@ export const fetchMyCockTails = createAsyncThunk<Cocktail[], string>('cocktails/
   return cocktails;
 });
 
+export const fetchOneCocktail = createAsyncThunk<Cocktail, string>('cocktails/fetchOne', async (id) => {
+  const {data: cocktail} = await axiosApi.get<Cocktail>(`/cocktails/${id}`);
+  return cocktail;
+});
+
 export const changeCocktail = createAsyncThunk<void, string>('cocktails/change', async (id) => {
   await axiosApi.patch(`/cocktails/${id}/togglePublished`);
 });
