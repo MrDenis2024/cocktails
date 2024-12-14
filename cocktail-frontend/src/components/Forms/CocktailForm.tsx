@@ -97,7 +97,7 @@ const CocktailForm: React.FC<Props> = ({onSubmit, createLoading}) => {
                 </div>
                 {index > 0 && (
                   <button type="button" className="btn btn-danger"
-                          onClick={() => onIngredientDelete(index)}>Delete</button>
+                          onClick={() => onIngredientDelete(index)}>Deleteeeeeee</button>
                 )}
               </div>
             ))}
